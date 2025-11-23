@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Temple Road Trip – National Parks by State</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Reuse your patriotic styles -->
+  <link rel="stylesheet" href="css/temple-trip.css">
+  <script src="js/nps-by-state.js" defer></script>
+</head>
+<body class="bg-flag">
+  <!-- Top brand bar -->
+  <header class="main-header">
+    <div class="brand">
+      <span class="brand-icon">🧭</span>
+      <span class="brand-text">Temple Road Trip</span>
+    </div>
+  </header>
+
+  <!-- Main nav (add this same link to your other pages when you’re ready) -->
+  <nav class="top-nav">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="temple-trip.html" class="nav-link">Trip planner &amp; map</a>
+    <a href="trip-ideas.html" class="nav-link">Ideas & Nearby Sights</a>
+    <a href="nps-by-state.html" class="nav-link active">NPS by State</a>
+    <a href="all-national-parks.html" class="nav-link">All National Parks</a>
+    <a href="national-parks.html" class="nav-link">National Parks</a>
+    <a href="pass-by-state.html" class="nav-link">Pass by State</a>
+  </nav>
+
+  <main class="wrap">
+    <!-- Collapsible “how to use” box -->
+    <section class="trip-info" open>
+      <summary class="trip-info-summary">
+        How to use this NPS by State page
+        <span class="chevron">▼</span>
+      </summary>
+      <div class="trip-info-body">
+        <p class="subtitle">
+          Pick a <strong>state</strong> to see National Parks and other big
+          National Park Service sites where your <strong>America the Beautiful</strong>
+          pass is useful. Click a park to center the map on it, or open it in Google Maps.
+        </p>
+        <p class="small-note">
+          Fees and hours change a lot. These are **rough ideas** – always double-check
+          the official NPS website before you go.
+        </p>
+      </div>
+    </section>
+
+    <section class="layout">
+      <!-- LEFT: state selector + map -->
+      <section class="panel">
+        <div class="panel-title">
+          <span>Pick a state</span>
+        </div>
+
+        <div class="field">
+          <label for="stateSelect"><strong>State</strong></label>
+          <select id="stateSelect">
+            <!-- populated by JS from the data -->
+          </select>
+        </div>
+
+        <p class="small">
+          When you change the state:
+          <br>• The map zooms to that state
+          <br>• The list on the right filters to only that state’s parks
+        </p>
+
+        <div class="panel-title" style="margin-top:0.75rem;">
+          <span>Map view</span>
+          <span class="small" id="mapStateHint">Whole U.S. overview</span>
+        </div>
+
+        <div class="map-wrapper">
+          <iframe id="npsMapFrame"
+                  src="https://www.google.com/maps?q=United+States+national+parks&z=3&output=embed"
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <div class="map-link-row">
+          <a id="npsMapExternalLink"
+             class="btn small ghost"
+             href="https://www.google.com/maps?q=United+States+national+parks"
+             target="_blank" rel="noopener">
+            Open this view in Google Maps
+          </a>
+        </div>
+
+        <p class="small-note">
+          If you’re offline, this map square may stay blank, but the list of parks
+          on the right will still show up because it’s all in this file.
+        </p>
+      </section>
+
+      <!-- RIGHT: parks list -->
+      <section class="panel">
+        <div class="panel-title">
+          <span>Parks & NPS sites in <span id="currentStateLabel">all states</span></span>
+        </div>
+
+        <div class="field">
+          <label for="parkSearch">Filter by name / city (optional)</label>
+          <input id="parkSearch" type="text" placeholder="Type 'Zion', 'Canyon', 'Houston', etc.">
+        </div>
+
+        <div class="list-header" style="margin-top:0.4rem;">
+          <span class="small" id="parkCountLabel">0 sites</span>
+          <span class="badge small">Pass = America the Beautiful</span>
+        </div>
+
+        <div class="stop-list" id="parkList">
+          <!-- JS fills in cards -->
+        </div>
+
+        <p class="small-note">
+          To add more parks later, just copy one of the cards in
+          <code>js/nps-by-state.js</code> and change the details.
+        </p>
+      </section>
+    </section>
+  </main>
+</body>
+</html>
