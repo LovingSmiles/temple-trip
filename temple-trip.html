@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Temple Road Trip Planner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/temple-trip.css">
+
+  <!-- Logic -->
+  <script src="js/temple-trip.js" defer></script>
+</head>
+<body class="bg-flag">
+  <!-- Top brand bar -->
+  <header class="main-header">
+    <div class="brand">
+      <span class="brand-icon">🧭</span>
+      <span class="brand-text">Temple Road Trip</span>
+    </div>
+  </header>
+
+  <!-- Main nav -->
+  <nav class="top-nav">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="temple-trip.html" class="nav-link active">Trip planner &amp; map</a>
+    <a href="trip-ideas.html" class="nav-link">Ideas &amp; Nearby Sights</a>
+    <a href="nps-by-state.html" class="nav-link">NPS by State</a>
+    <a href="all-national-parks.html" class="nav-link">All National Parks</a>
+    <a href="national-parks.html" class="nav-link">National Parks</a>
+    <a href="pass-by-state.html" class="nav-link">Pass by State</a>
+  </nav>
+
+  <main class="wrap">
+    <!-- Collapsible overview box -->
+    <details class="trip-info" open>
+      <summary class="trip-info-summary">
+        Temple Road Trip Planner – overview
+        <span class="chevron">▼</span>
+      </summary>
+
+      <div class="trip-info-body">
+        <h1>Temple Road Trip Planner</h1>
+        <p class="subtitle">
+          December 2025 temples &amp; sights — fully editable, patriotic theme, and a map that changes when you click a stop.
+        </p>
+
+        <!-- Info / budget row -->
+        <section class="info-row">
+          <div class="info-box" id="statsBox">
+            Trip stats loading…
+          </div>
+          <div class="info-box">
+            <strong>Sleep &amp; offline:</strong>
+            The schedule and notes work fine with no Wi-Fi or data (everything is saved in this browser).
+            The map square uses a simple Google Maps embed, so if you're offline, that square might stay blank.
+          </div>
+        </section>
+      </div>
+    </details>
+
+    <!-- Tabs row -->
+    <section class="tabs-row">
+      <button type="button" class="nav-tab active" data-tab="itinerary">
+        Itinerary &amp; temples
+      </button>
+      <button type="button" class="nav-tab" data-tab="ideas">
+        Extra ideas – parks &amp; museums
+      </button>
+    </section>
+
+    <!-- ============= TAB: ITINERARY ============= -->
+    <section id="tab-itinerary" class="tab-panel active">
+      <section class="layout">
+        <!-- LEFT: form + list -->
+        <section class="panel">
+          <div class="panel-title">
+            <span>Add / Edit stop</span>
+            <button type="button" class="btn btn-ghost" id="clearAllBtn">Clear all</button>
+          </div>
+
+          <form id="stopForm">
+            <input type="hidden" id="editStopId">
+
+            <div class="form-grid">
+              <div>
+                <label for="nameInput">Name</label>
+                <input id="nameInput" type="text" placeholder="Las Vegas Nevada Temple" required>
+              </div>
+              <div>
+                <label for="typeInput">Type</label>
+                <select id="typeInput">
+                  <option value="temple">Temple</option>
+                  <option value="nps">National Park / NPS</option>
+                  <option value="museum">Museum / historic</option>
+                  <option value="drive">Drive / travel day</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="locationInput">City / address</label>
+                <input id="locationInput" type="text" placeholder="Las Vegas, NV" required>
+              </div>
+              <div>
+                <label for="arrivalInput">Arrival / session time</label>
+                <input id="arrivalInput" type="datetime-local">
+              </div>
+
+              <div>
+                <label for="departInput">Planned depart time</label>
+                <input id="departInput" type="datetime-local">
+              </div>
+              <div>
+                <label>Extra cost (tickets, etc.)</label>
+                <div class="cost-row">
+                  <input id="costMinInput" type="number" min="0" step="1" placeholder="min $">
+                  <input id="costMaxInput" type="number" min="0" step="1" placeholder="max $">
+                </div>
+              </div>
+
+              <div>
+                <label for="latInput">Latitude (optional)</label>
+                <input id="latInput" type="number" step="0.000001" placeholder="36.1295">
+              </div>
+              <div>
+                <label for="lngInput">Longitude (optional)</label>
+                <input id="lngInput" type="number" step="0.000001" placeholder="-115.2947">
+              </div>
+
+              <div class="form-row-full">
+                <label for="summaryNotesInput">Short notes (shown on card)</label>
+                <textarea id="summaryNotesInput" placeholder="Aim to arrive 30–45 minutes early; park in north lot."></textarea>
+              </div>
+
+              <div class="form-row-full form-actions">
+                <button type="submit" class="btn" id="saveStopBtn">Add stop</button>
+                <button type="button" class="btn btn-ghost" id="newStopBtn">New blank</button>
+                <button type="button" class="btn btn-ghost" id="resetFormBtn">Reset fields</button>
+                <span class="small">Data is saved automatically in this browser (localStorage).</span>
+              </div>
+            </div>
+          </form>
+
+          <hr class="divider">
+
+          <div class="panel-title panel-title-small">
+            <span>Your stops</span>
+            <span class="small" id="stopCountLabel">0 stops</span>
+          </div>
+          <p class="small">
+            Tip: click any card to select it. That will highlight it, update the map on the right,
+            and load that stop’s detailed notes.
+          </p>
+          <div class="stop-list" id="stopList"></div>
+        </section>
+
+        <!-- RIGHT: map + notes -->
+        <section class="panel">
+          <div class="panel-title">
+            <span>Map</span>
+            <span class="small" id="mapHint">
+              If a stop has latitude/longitude or a location, clicking it will load it here.
+            </span>
+          </div>
+
+          <div class="map-wrapper">
+            <iframe id="mapFrame"
+                    src="about:blank"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+
+          <div class="map-link-row">
+            <a id="mapExternalLink"
+               class="btn small ghost"
+               href="#"
+               target="_blank" rel="noopener">
+              Open this stop in Google Maps
+            </a>
+          </div>
+
+          <p class="map-hint">
+            Click a stop on the left to center the map on that exact location.
+          </p>
+
+          <div class="notes-header">
+            <span>Notes for selected stop</span>
+            <span class="badge" id="notesStopLabel">No stop selected</span>
+          </div>
+          <textarea id="detailNotesInput"
+                    placeholder="Detailed notes for this stop (feelings, experiences, packing reminders, etc.)."
+                    disabled></textarea>
+
+          <p class="sleep-tip">
+            Sleep reminder: use your arrival &amp; depart times plus drive time to make sure you still get
+            at least 5 hours of actual sleep before each early temple morning.
+          </p>
+        </section>
+      </section>
+    </section>
+
+    <!-- ============= TAB: IDEAS ============= -->
+    <section id="tab-ideas" class="tab-panel">
+      <section class="panel full-width">
+        <div class="panel-title">
+          <span>Extra ideas – parks, museums &amp; cool stops</span>
+        </div>
+
+        <p class="small">
+          These are bonus places near your temple route: parks, museums, cool viewpoints, downtown areas.
+          These do <strong>not</strong> automatically become trip stops — you can manually add any you like.
+        </p>
+
+        <div class="filters-row">
+          <div class="field">
+            <label for="ideaSearchInput">Search by name / city / notes</label>
+            <input id="ideaSearchInput" type="text" placeholder="Type 'Hoover', 'NASA', 'museum', etc.">
+          </div>
+          <div class="field">
+            <label for="ideaStateFilter">State</label>
+            <select id="ideaStateFilter">
+              <option value="">All states</option>
+              <option value="NV">Nevada</option>
+              <option value="UT">Utah</option>
+              <option value="AZ">Arizona</option>
+              <option value="NM">New Mexico</option>
+              <option value="TX">Texas</option>
+              <option value="LA">Louisiana</option>
+              <option value="CO">Colorado</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="ideaTypeFilter">Type</label>
+            <select id="ideaTypeFilter">
+              <option value="">All types</option>
+              <option value="nps">National Park / NPS</option>
+              <option value="museum">Museum</option>
+              <option value="historic">Historic</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="layout">
+          <!-- LEFT: idea list -->
+          <section class="panel">
+            <div class="list-header">
+              <span class="small" id="ideaCountLabel">0 places</span>
+            </div>
+            <div class="stop-list" id="ideaList">
+              <!-- JS fills this -->
+            </div>
+          </section>
+
+          <!-- RIGHT: idea map + details -->
+          <section class="panel">
+            <div class="panel-title">
+              <span>Idea map</span>
+              <span class="small" id="ideasMapHint">Click a place on the left to see it here.</span>
+            </div>
+
+            <div class="map-wrapper">
+              <iframe id="ideasMapFrame"
+                      src="about:blank"
+                      loading="lazy"
+                      referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+
+            <div class="map-link-row">
+              <a id="ideasMapExternalLink"
+                 class="btn small ghost"
+                 href="#"
+                 target="_blank" rel="noopener">
+                Open this place in Google Maps
+              </a>
+            </div>
+
+            <div id="ideaDetailBox" class="idea-detail-box">
+              <p class="small-note">Click a place on the left to see details here.</p>
+            </div>
+          </section>
+        </div>
+      </section>
+    </section>
+  </main>
+</body>
+</html>
